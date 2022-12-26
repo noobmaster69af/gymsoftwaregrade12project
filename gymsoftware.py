@@ -211,9 +211,12 @@ def c_address():
     while True:
         # trying to take street address,city,state and postcode as input and returns them
         try:
-            streetaddress = input("Enter the client street address: ")
+            street = input("Enter the client street address: ")
             city = input('Enter the client city name: ')
             state = input('Enter the client state: ')
+            if street or city or state =='':
+                print("address values cannot be null!!!")
+                continue
             while True:
                 # trying to take postcode as input
                 try:
@@ -300,6 +303,7 @@ Your choice: '''))
         # if failed due to an invalid input, responds to the user with an error message
         except ValueError:
             print('Please enter a valid option!!!')
+
 
 def set_fees(pf, M, Q, H, Y):
     """Sets payment frequency based on the payment frequency"""
@@ -436,6 +440,7 @@ def home_page():
 1.ADD NEW CLIENT DETAILS
 2.UPDATE CLIENT DETAILS
 3.VIEW CLIENT DETAILS
+4.PAY FEES
 0.Exit
 Enter your choice: '''))
             if ch == 1:
@@ -784,6 +789,9 @@ Your choice: ''').upper()
                                 street = input("Enter the client street address(updated): ")
                                 city = input('Enter the client city name(updated): ')
                                 state = input('Enter the client state(updated): ')
+                                if street or city or state == '':
+                                    print("address values cannot be null!!!")
+                                    continue
                                 while True:
                                     # trying to take postcode as an input
                                     try:
@@ -990,12 +998,15 @@ Your choice: ''').upper()
                     while True:
                         # trying to take updated address as input
                         try:
-                            street = input("Enter the client street address: ")
-                            city = input('Enter the client city name: ')
-                            state = input('Enter the client state: ')
+                            street = input("Enter the client street address(updated): ")
+                            city = input('Enter the client city name(updated): ')
+                            state = input('Enter the client state(updated): ')
+                            if street or city or state == '':
+                                print("address values cannot be null!!!")
+                                continue
                             while True:
                                 try:
-                                    zipcode = int(input('Enter the client ZIPCODE: '))
+                                    zipcode = int(input('Enter the client ZIPCODE(updated): '))
                                 except ValueError:
                                     print('Invalid values entered')
                                     continue
@@ -1052,14 +1063,14 @@ Your choice: ''').upper()
                 elif upvalue == 7:
                     while True:
                         # takes the updated emergency contact name as input
-                        ecname = input("Enter the client's emergency contact full name: ")
+                        ecname = input("Enter the client's emergency contact full name(updated): ")
                         if len(ecname) < 2:
                             print('pls enter a valid name!')
                             continue
                         while True:
                             # trying to take the updated emergency contact phone number as input
                             try:
-                                phno = int(input("Enter the client's emergency contact phone number: "))
+                                phno = int(input("Enter the client's emergency contact phone number(updated): "))
                                 if len(str(phno)) != 10:
                                     print('please enter a valid phone number!')
                                     continue
@@ -1166,6 +1177,7 @@ def updcsv(searchcolname, upvalcolname, searchval=None, upval=None):
             df.loc[df[searchcolname] == searchval, upvalcolname] = upval
             df.to_csv('fee_details.csv', index=False)
             break
+
 
 def updcsvpayment_frequency(M, Q, H, Y):
     """Serves as an interface to update the payment frequency"""
