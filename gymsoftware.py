@@ -228,7 +228,7 @@ def c_address():
                 if len(str(postcode)) != 6:
                     print('Postcode should contain exactly 6 digits!!!')
                     continue
-                return streetaddress, city, state, str(postcode)
+                return street, city, state, str(postcode)
         # if failed due to an invalid input, responds to the user with an error message
         except ValueError:
             print('Please enter valid input!!!')
