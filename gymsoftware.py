@@ -53,7 +53,7 @@ def set_date(payment_frequency):
 
 
 def pay_fees(name=None, phno=None):
-    if name and phno is None:
+    if name is None and phno is None:
         while True:
             ch = int(input('''Search client by 
 1.name
