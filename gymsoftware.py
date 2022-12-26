@@ -68,7 +68,7 @@ enter your choice: '''))
                         continue
                     break
                 updcsv("Name", 'SubscriptionStatus', cname, 'Active')
-                setduedate(name)
+                setduedate(cname)
                 break
             elif ch == 2:
                 while True:
@@ -95,10 +95,11 @@ enter your choice: '''))
     else:
         updcsv('Name', 'SubscriptionStatus', name, 'Active')
         setduedate(name)
+    home_page()
 
 
 def setduedate(name=None, phno=None):
-    dup = False
+    pf=''
     df = pd.read_csv('fee_details.csv')
     if name is not None and phno is not None:
         pf = searchforpf('Name', name)
@@ -112,22 +113,11 @@ def setduedate(name=None, phno=None):
         x = df.loc[df['PhoneNo'] == phno, "Name"]
         for i in x:
             name = i
-    # opens the csv file and sets the bool value for dup as true if duplicate found
-    with open('fee_details.csv', 'r') as file:
-        reader = csv.reader(file)
-        read_data = [i for i in reader]
-        for i in read_data:
-            if i[0] == name and i[1] == phno:
-                dup = True
-            else:
-                pass
-    # if name a phone number already exist, just updates the paid date and due date for the specific client
-    # used in paying fee function
-    if dup:
-        paid_date, due_date = set_date(pf)
-        df.loc[df['Name'] == name, "PaidDate"] = paid_date
-        df.loc[df['Name'] == name, "DueDate"] = due_date
-        df.to_csv('fee_details.csv', index=False)
+    paid_date, due_date = set_date(pf)
+    df.loc[df['Name'] == name, "PaidDate"] = paid_date
+    df.loc[df['Name'] == name, "DueDate"] = due_date
+    df.to_csv('fee_details.csv', index=False)
+
 
 
 def feedefaulters():
@@ -239,9 +229,6 @@ def c_address():
             street = input("Enter the client street address: ")
             city = input('Enter the client city name: ')
             state = input('Enter the client state: ')
-            if street or city or state =='':
-                print("address values cannot be null!!!")
-                continue
             while True:
                 # trying to take postcode as input
                 try:
