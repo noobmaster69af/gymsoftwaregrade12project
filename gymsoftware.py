@@ -444,6 +444,8 @@ Enter your choice: '''))
                 updatec_data()
             elif ch == 3:
                 displayc_data()
+            elif ch==4:
+                pay_fees()
             elif ch == 0:
                 print('Logging off!')
                 time.sleep(2)
