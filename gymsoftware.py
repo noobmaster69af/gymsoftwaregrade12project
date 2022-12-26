@@ -95,7 +95,6 @@ def setduedate(name=None, phno=None):
         x = df.loc[df['PhoneNo'] == phno, "Name"]
         for i in x:
             name = i
-    paid_date, due_date = set_date(pf)
     # opens the csv file and sets the bool value for dup as true if duplicate found
     with open('fee_details.csv', 'r') as file:
         reader = csv.reader(file)
@@ -105,12 +104,10 @@ def setduedate(name=None, phno=None):
                 dup = True
             else:
                 pass
-    # if no duplicate value is found, opens file in inputs the values
-    if not dup:
-        with open('fee_details.csv', 'a', newline='') as file:
-            writer = csv.writer(file, escapechar='\n')
-            writer.writerow([name, phno, paid_date, due_date])
-    elif dup:
+    # if name a phone number already exist, just updates the paid date and due date for the specific client
+    # used in paying fee function
+    if dup:
+        paid_date, due_date = set_date(pf)
         df.loc[df['Name'] == name, "PaidDate"] = paid_date
         df.loc[df['Name'] == name, "DueDate"] = due_date
         df.to_csv('fee_details.csv', index=False)
@@ -1131,9 +1128,6 @@ def updcsv(searchcolname, upvalcolname, searchval=None, upval=None):
         if searchval == None:
             searchval = input(f'Enter client {outseaname} you want to change {outupname} of: ')
             pass
-        else:
-            print("I am repeating. Line 1135")
-            pass
         if searchval == '':
             print(f"{outseaname} field cannot be left blank")
             continue
@@ -1169,7 +1163,7 @@ def updcsv(searchcolname, upvalcolname, searchval=None, upval=None):
         elif upvalcolname == 'SubscriptionStatus':
             df.loc[df[searchcolname] == searchval, upvalcolname] = upval
             df.to_csv('fee_details.csv', index=False)
-
+            break
 
 def updcsvpayment_frequency(M, Q, H, Y):
     """Serves as an interface to update the payment frequency"""
