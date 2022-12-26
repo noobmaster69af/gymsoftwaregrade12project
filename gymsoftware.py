@@ -10,6 +10,23 @@ today=dat.today()
 mydb = con.connect(host='localhost', user='root', password='tiger')  # trying to establish a connection to mysql server
 mc = mydb.cursor()
 
+def displayfeedefaulters():
+    try:
+        df = pd.read_csv(fdcsvdir)
+        # Filter the DataFrame to include only rows where the subscription_status is 'expired'
+        expired_subscribers = df.loc[df['SubscriptionStatus'] == 'expired']
+        # Check if the DataFrame is empty
+        if not expired_subscribers.empty:
+            # Print the DataFrame if it is not empty
+            expired_subscribers.index = expired_subscribers.index + 1
+            print(expired_subscribers)
+        else:
+            print('\nNo fee defaulters')
+        home_page()
+    except:
+        print('No data')
+        home_page()
+
 
 def set_date(payment_frequency):
     """Set paid date and next payment date"""
@@ -114,16 +131,24 @@ def setduedate(name=None, phno=None):
 
 
 def feedefaulters():
-    df=pd.read_csv(fdcsvdir)
-    for index, row in df.iterrows():
-        # Check the value of the due date column
-        due_date = row['DueDate']
-        if due_date < dat.today():
-            # Update the subscription status to "expired"
-            row['SubscriptionStatus'] = 'expired'
-
-    # Write the updated DataFrame back to the CSV file
-    df.to_csv(fdcsvdir, index=False)
+    try:
+        df = pd.read_csv(fdcsvdir)
+        pd.set_option('display.max_rows', None)
+        pd.set_option('display.max_columns', None)
+        pd.options.display.width = None
+        # Convert the DueDate column to datetime objects
+        df['DueDate'] = pd.to_datetime(df['DueDate'], format='%Y-%m-%d')
+        # Convert the DueDate column to date objects
+        df['DueDate'] = df['DueDate'].apply(lambda x: x.date())
+        # Update the SubscriptionStatus column for rows where the DueDate is less than the current date
+        df.loc[df["DueDate"] < dat.today(), 'SubscriptionStatus'] = 'expired'
+        # Convert the DueDate column back to strings
+        df['DueDate'] = df['DueDate'].astype(str)
+        # Write the updated DataFrame back to the CSV file
+        df.to_csv(fdcsvdir, index=False)
+    except Exception as e:
+        print(e)
+        return
 
 
 def autoupage():
@@ -428,6 +453,7 @@ def Startup():
 {dt.datetime.now().strftime("%H:%M:%S")}\t\t{dt.datetime.today().strftime("%d:%b:%Y")}''')
     fsg()
     autoupage()
+    feedefaulters()
     home_page()
 
 
@@ -441,6 +467,7 @@ def home_page():
 2.UPDATE CLIENT DETAILS
 3.VIEW CLIENT DETAILS
 4.PAY FEES
+5.DISPLAY FEE DEFAULTERS
 0.Exit
 Enter your choice: '''))
             if ch == 1:
@@ -451,6 +478,8 @@ Enter your choice: '''))
                 displayc_data()
             elif ch==4:
                 pay_fees()
+            elif ch==5:
+                displayfeedefaulters()
             elif ch == 0:
                 print('Logging off!')
                 time.sleep(2)
