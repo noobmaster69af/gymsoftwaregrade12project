@@ -100,7 +100,7 @@ enter your choice: '''))
 def setduedate(name=None, phno=None):
     dup = False
     df = pd.read_csv('fee_details.csv')
-    if name and phno is not None:
+    if name is not None and phno is not None:
         pf = searchforpf('Name', name)
     elif name is not None:
         pf = searchforpf('Name', name)
