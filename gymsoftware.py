@@ -471,6 +471,7 @@ Enter your choice: '''))
                 print('Logging off!')
                 time.sleep(2)
                 exit()
+                break
             else:
                 print('Please enter a valid option!!!')
                 continue
